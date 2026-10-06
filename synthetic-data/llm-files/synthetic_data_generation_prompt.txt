@@ -1,0 +1,576 @@
+You are generating synthetic personal banking transaction data for fictional bank statements.
+
+Your task is to generate transactions for every calendar month from August 2022 through July 2026, inclusive. The data should resemble realistic personal banking activity for a young adult male living in Barbados.
+
+This period contains exactly 48 consecutive monthly bank statements.
+
+## Output Format
+
+Return the result as a downloadable plain text (.txt) file.
+
+The text file must contain only one valid three-dimensional Python list. Do not include Markdown, explanations, comments, variable assignments, headings, validation notes, or any other text inside the file.
+
+The outer list must contain exactly 48 items, one item for each monthly bank statement, ordered chronologically from August 2022 through July 2026.
+
+Each monthly bank statement must be a two-dimensional Python list containing between 30 and 80 transactions.
+
+Each transaction must be an inner list containing exactly 6 values in this order:
+
+[
+    Date,
+    Description,
+    Debits,
+    Credits,
+    Balance,
+    Year
+]
+
+Example structure:
+
+[
+    [
+        ["AUG01", "Description", "10.00", "0.00", "1722.28", "2022"],
+        ["AUG02", "Description", "0.00", "250.00", "1972.28", "2022"]
+    ],
+    [
+        ["SEP01", "Description", "25.00", "0.00", "1947.28", "2022"]
+    ]
+]
+
+Continue this structure for all 48 monthly statements through July 2026.
+
+All numeric values must be stored as strings.
+
+Correct:
+["AUG01", "MASSY STORES", "45.20", "0.00", "1687.08", "2022"]
+
+Incorrect:
+["AUG01", "MASSY STORES", 45.20, 0.00, 1687.08, 2022]
+
+## 1. Date
+
+The first value represents the transaction date.
+
+Format:
+
+<MONTH><DAY>
+
+Rules:
+
+- Month must be a three-letter abbreviation in uppercase.
+- Day must always contain two digits.
+- Use a leading zero for days 1 through 9.
+- Examples: AUG04, JAN18, JUL30.
+- Every transaction must belong to the month represented by its monthly array.
+- Monthly arrays must be ordered chronologically from August 2022 through July 2026.
+- Transactions must be ordered chronologically within each month.
+- Multiple transactions may occur on the same day.
+- Use only valid calendar dates.
+- Account for leap years when generating February dates.
+
+## 2. Description
+
+The second value contains the bank statement description for the transaction.
+
+Descriptions should resemble actual bank statement descriptors rather than clean business names.
+
+Include realistic inconsistencies and variations:
+
+- The same entity may appear under slightly different descriptions.
+- Unique numbers, dates, or reference numbers may be appended.
+- An entity may change its statement descriptor or business name over time.
+- Different subsidiaries or locations of the same parent company may use different descriptors.
+- Some descriptions may contain abbreviations.
+- Some descriptions may contain location information.
+- Capitalization and formatting may vary.
+- Descriptions should not always be perfectly standardized.
+
+For example:
+
+NETFLIX.COM
+NETFLIX.COM 839201
+NETFLIX*MONTHLY
+
+These may all represent the same underlying business.
+
+Do not make every description messy. Use a realistic mixture of clean and messy descriptors.
+
+Because the dataset spans multiple years, merchant descriptors may evolve gradually over time.
+
+## 3. Debits
+
+The third value represents money spent from the account.
+
+- Store the value as a string.
+- Use Barbadian dollars.
+- Always use two decimal places.
+- A Debit transaction must have a positive debit amount.
+- If the transaction is a Credit, this value must be exactly "0.00".
+
+## 4. Credits
+
+The fourth value represents money received into the account.
+
+- Store the value as a string.
+- Use Barbadian dollars.
+- Always use two decimal places.
+- A Credit transaction must have a positive credit amount.
+- If the transaction is a Debit, this value must be exactly "0.00".
+
+A transaction can never be both a Debit and a Credit.
+
+Debit transaction:
+[Date, Description, "debit_amount", "0.00", Balance, Year]
+
+Credit transaction:
+[Date, Description, "0.00", "credit_amount", Balance, Year]
+
+## 5. Balance
+
+The fifth value represents the account balance after the transaction has occurred.
+
+Store the balance as a string with exactly two decimal places.
+
+The balance must be calculated sequentially across the entire 48-month period.
+
+For a Debit:
+
+new_balance = previous_balance - debit_amount
+
+For a Credit:
+
+new_balance = previous_balance + credit_amount
+
+Do not independently generate balance values.
+
+Although balances are returned as strings, perform the calculations numerically before formatting each final value as a string.
+
+## 6. Year
+
+The sixth and final value represents the calendar year of the transaction.
+
+Use:
+
+- "2022" for August 2022 through December 2022.
+- "2023" for January 2023 through December 2023.
+- "2024" for January 2024 through December 2024.
+- "2025" for January 2025 through December 2025.
+- "2026" for January 2026 through July 2026.
+
+The year must always be stored as a string.
+
+## Starting Balance
+
+Use the following starting balance immediately before the first transaction in August 2022:
+
+STARTING_BALANCE = 6732.28
+
+Do not include the starting balance as a transaction.
+
+The first August 2022 transaction's balance must be calculated from this starting balance.
+
+The final balance of each month must become the starting balance for the following month.
+
+Do not reset the balance when a new month or year begins.
+
+The account balance must **never fall below 0.00**.
+
+Before creating any Debit transaction, ensure the debit amount is less than or equal to the currently available balance.
+
+Never create a transaction that would make the account balance negative.
+
+If the available balance becomes low, adjust spending behavior realistically instead of allowing the balance to become negative.
+
+All 48 statements must represent consecutive statements from the same bank account.
+
+## Currency
+
+All transaction amounts are in Barbadian dollars (BBD).
+
+Use realistic amounts for everyday personal spending in Barbados.
+
+Do not use unrealistically large transaction amounts unless the transaction type reasonably justifies it.
+
+Amounts may change realistically over the four-year period.
+
+## Transaction Context
+
+The transaction mix should resemble the spending and income of a young adult male living in Barbados.
+
+Use the following categories as guidance, but do not require every category in every month.
+
+### Everyday Spending
+
+Include realistic examples of:
+
+- Groceries
+- Restaurants
+- Fast food
+- Cafes
+- Takeaway food
+- Clothing
+- Personal care
+- Entertainment
+- Movies
+- Recreation
+- Transportation
+- Gas/fuel
+- Parking
+- Miscellaneous purchases
+
+Frequently visited merchants may appear across many months, but amounts, locations, dates, and descriptors should vary naturally.
+
+### Bills and Utilities
+
+Include recurring or periodic expenses such as:
+
+- Electricity
+- Water
+- Internet
+- Mobile phone bills
+- Mobile phone top-ups
+
+Bills may recur across many months.
+
+Do not make recurring bills appear on the exact same day or for the exact same amount every month.
+
+### Subscriptions
+
+Include subscriptions such as:
+
+- Netflix
+- A chatbot/LLM service
+- Gym membership
+- Amazon Prime
+- Disney+
+
+Subscriptions may recur across many months.
+
+Subscription prices and descriptions may change over time.
+
+Subscriptions may occasionally begin, end, pause, or change price during the period.
+
+### Online Shopping
+
+Include purchases from services such as:
+
+- Shein
+- Amazon
+
+Treat these as international transactions where appropriate.
+
+Online shopping frequency should vary naturally from month to month.
+
+### Travel
+
+Include occasional realistic travel-related transactions such as:
+
+- Airline purchases
+- Hotels
+- Travel websites
+- Transportation
+- International purchases while travelling
+
+Do not make travel expenses dominate the dataset.
+
+Travel activity does not need to occur every month.
+
+When travel occurs, several international transactions may reasonably cluster within a short period.
+
+### Transfers Between Friends and Family
+
+Include both money sent to and money received from friends or family.
+
+For friend and family transfers, the description must contain only the person's full name.
+
+Do not include text such as:
+
+TRANSFER TO
+TRANSFER FROM
+PAYMENT TO
+PAYMENT FROM
+
+Examples:
+
+JASON WILLIAMS
+MARCUS CLARKE
+DANIELLE HOLDER
+STEPHANIE KING
+
+The direction of the transfer must be determined only by whether the amount appears in Debits or Credits.
+
+Example debit:
+["AUG08", "JASON WILLIAMS", "65.00", "0.00", "...", "2022"]
+
+Example credit:
+["AUG18", "MARCUS CLARKE", "0.00", "120.00", "...", "2022"]
+
+Use plausible fictional full names.
+
+The same people may appear repeatedly across the multi-year period.
+
+### ATM Withdrawals
+
+Include realistic ATM withdrawals throughout the dataset.
+
+Descriptions may contain information such as:
+
+ATM WITHDRAWAL
+ATM CASH WITHDRAWAL
+ATM WITHDRAWAL BRIDGETOWN
+ATM CASH 00492
+
+The withdrawal amount must appear as a Debit.
+
+ATM withdrawals do not need to occur every month.
+
+## Income
+
+Include realistic credits such as:
+
+- Salary
+- Reimbursements
+- Refunds
+- Money received from friends or family
+- Other plausible personal account credits
+
+Salary or other recurring income may appear monthly.
+
+Recurring income should occur on reasonably similar dates where appropriate, but not necessarily the exact same day each month.
+
+Income should evolve realistically over the four-year period. Salary may occasionally increase rather than remaining unchanged for the entire dataset.
+
+Do not make income changes occur on an obvious repeating schedule.
+
+## International Transactions and Foreign Exchange Fee
+
+Whenever an international transaction occurs, immediately create a separate Debit transaction after it for the foreign exchange fee.
+
+The fee must be exactly 2% of the international transaction amount.
+
+The description must be exactly:
+
+2.00% Exchange Tax
+
+Example:
+
+["SEP12", "AMAZON.COM 123456", "100.00", "0.00", "...", "2022"]
+["SEP12", "2.00% Exchange Tax", "2.00", "0.00", "...", "2022"]
+
+Rules:
+
+- The exchange fee is a separate transaction.
+- The exchange fee is always a Debit.
+- It must immediately follow the associated international transaction.
+- It must use the same date and year as the associated international transaction.
+- It must equal exactly 2% of the international transaction amount.
+- Round to two decimal places where necessary.
+- Store the fee as a string.
+- Do not apply an exchange fee to domestic transactions.
+- Do not create another exchange fee for the exchange-fee transaction itself.
+- Every international transaction must have its own exchange-fee transaction.
+
+## Continuity Across the Full Period
+
+The 48 monthly statements must feel like consecutive statements from the same bank account rather than independent datasets.
+
+Maintain realistic continuity where appropriate:
+
+- Monthly subscriptions may repeat.
+- Salary may repeat.
+- Utility bills may repeat.
+- Frequently visited businesses may appear across many months or years.
+- The same friends or family members may appear in transfers.
+- Merchant descriptors may change gradually over time.
+- Spending amounts should naturally vary between months.
+- Some merchants may appear only during part of the period.
+- New merchants or subscriptions may appear in later years.
+- Older merchants or subscriptions may disappear.
+- Income can change over time.
+- Recurring bills and subscriptions may change price.
+- Lifestyle and spending patterns may shift gradually.
+- The ending balance of every month must carry directly into the next month.
+
+Do not make monthly statements identical or overly repetitive.
+
+## Balance-Aware Spending Behavior
+
+Spending behavior must respond realistically to the amount of money currently available in the account.
+
+The account represents a normal personal banking account with no overdraft facility, so the balance can never become negative.
+
+Use the current balance as context when deciding what transactions should occur.
+
+### When the balance is ample
+
+When sufficient money is available:
+
+- Spending can follow normal patterns.
+- Include discretionary purchases such as restaurants, entertainment, clothing, online shopping, subscriptions, recreation, and occasional travel.
+- Larger one-time purchases may occur when financially reasonable.
+- The account holder does not need to behave unusually frugally.
+
+### When the balance is getting low
+
+As the available balance decreases:
+
+- Reduce discretionary spending.
+- Make restaurant, entertainment, clothing, recreation, and online-shopping transactions less frequent.
+- Prefer smaller transaction amounts.
+- Avoid unnecessary larger purchases.
+- Continue realistic essential spending where funds permit.
+- ATM withdrawals should generally become smaller or less frequent.
+- Transfers sent to friends or family should become less frequent or smaller unless realistic circumstances support them.
+
+### When the balance is very low
+
+When funds are very limited:
+
+- Spending should focus primarily on essentials.
+- Prioritize groceries, necessary transportation, fuel, essential utilities, mobile service, and other basic needs.
+- Avoid or postpone discretionary purchases such as entertainment, clothing, nonessential online shopping, travel, and unnecessary dining out.
+- Do not create a debit simply to preserve a category, transaction pattern, or monthly transaction count.
+- It is acceptable for spending activity to decrease while waiting for salary or another credit.
+- Never invent an unrealistically tiny purchase just because only a small amount of money is available.
+- If the remaining balance is too low to support a realistic purchase at a merchant, omit or postpone that transaction rather than shrinking it to an implausible amount.
+- For example, do not generate transactions such as `"0.04"` at a supermarket, gas station, restaurant, utility provider, clothing store, or other normal merchant.
+- Essential transactions must still use plausible real-world amounts for the merchant and purchase type.
+- If an essential transaction would exceed the available balance, postpone or omit it rather than allowing the balance to become negative or reducing it to an unrealistic token amount.
+
+### After funds increase
+
+After salary, a transfer, reimbursement, refund, or other meaningful Credit increases the balance:
+
+- Spending patterns may gradually return to normal.
+- Discretionary purchases may resume.
+- Do not immediately create excessive spending simply because a large Credit occurred.
+- The change in spending should feel natural rather than mechanically tied to a fixed balance threshold.
+
+Do not use rigid visible thresholds such as always changing behavior at exactly the same balance value.
+
+Instead, simulate realistic human behavior where the account holder becomes increasingly cautious as available funds decrease and becomes less restricted once funds are ample again.
+
+The goal is for the transaction history to reflect both financial constraints and behavioral adaptation while maintaining a balance of at least `"0.00"` at all times.
+
+## Realistic Transaction Amounts
+
+Every non-fee transaction amount must be plausible for the merchant, transaction type, and context.
+
+Do not create extremely small or token-value purchases simply to increase the transaction count or to keep spending active when the balance is low.
+
+Examples of unrealistic behavior to avoid include:
+
+- `"0.04"` spent at a supermarket.
+- `"0.08"` spent on fuel at a gas station.
+- `"0.25"` spent at a restaurant.
+- `"0.10"` paid for a normal utility bill.
+- Very small ATM withdrawals that would not realistically occur.
+- Artificially reducing an ordinary purchase to a few cents because the account has little money remaining.
+
+When the available balance cannot support a realistic purchase:
+
+- Do not add that purchase.
+- Postpone or omit it.
+- Reduce discretionary activity instead of reducing transaction values to unrealistic levels.
+- Allow the account to wait for a future Credit when appropriate.
+
+The 30-to-80 transaction requirement must be satisfied through a realistic mix of genuine-looking purchases, bills, Credits, transfers, fees, and other activity, not by fabricating micro-transactions.
+
+Plan income and spending across the month so that the required transaction count can be achieved naturally while keeping every balance non-negative and every transaction amount realistic.
+
+The `"2.00% Exchange Tax"` is a calculated percentage fee and may legitimately be a small amount when its associated international transaction is small. This exception does not justify unrealistic merchant purchase amounts.
+
+## Realism and Distribution
+
+Each monthly statement must independently contain between 30 and 80 transactions.
+
+Different months should contain different numbers of transactions. Do not generate exactly the same number every month.
+
+Across the full period, include a realistic mixture of:
+
+- Small purchases
+- Moderate purchases
+- Occasional larger purchases
+- Recurring expenses
+- One-time purchases
+- Credits
+- Transfers
+- ATM withdrawals
+- Domestic transactions
+- International transactions
+
+Do not make dates or transaction amounts follow an obvious repeating pattern.
+
+Some days may contain several transactions, while other days may contain none.
+
+Seasonal and occasional spending patterns may appear where realistic, but do not make them mechanically repetitive every year.
+
+The dataset should feel like four consecutive years of genuine personal banking activity.
+
+## Recurring Transactions and Descriptor Variation
+
+Some businesses may appear repeatedly within a month and across the full period.
+
+When the same underlying business appears multiple times, do not necessarily use the exact same description every time.
+
+For example:
+
+AMZN Mktp US*12345
+AMAZON.COM*98765
+AMZN MKTP
+
+could all represent Amazon-related transactions.
+
+Recurring merchants may have descriptor variations across months and years.
+
+The goal is to create data useful for testing transaction-description cleaning and entity grouping.
+
+## Financial Validation Requirements
+
+Before creating the final text file, internally verify all of the following:
+
+1. The outer list contains exactly 48 monthly arrays.
+2. The monthly arrays run consecutively from August 2022 through July 2026.
+3. No month is missing or duplicated.
+4. Each monthly array contains between 30 and 80 transactions.
+5. Every transaction contains exactly 6 values.
+6. Every transaction date matches its monthly array.
+7. Every year value matches the correct calendar year.
+8. All dates are valid calendar dates.
+9. Transactions are chronological within each month.
+10. Monthly arrays are chronological across the full period.
+11. Every Debit, Credit, Balance, and Year value is stored as a string.
+12. Every Debit, Credit, and Balance amount has exactly two decimal places.
+13. Every transaction is either a Debit or a Credit.
+14. No transaction contains both a positive Debit and a positive Credit.
+15. Debit transactions have Credits equal to "0.00".
+16. Credit transactions have Debits equal to "0.00".
+17. Every balance is calculated from the previous balance.
+18. The first August 2022 balance is calculated from the provided starting balance.
+19. Each month's final balance becomes the starting balance for the following month.
+20. The balance is never reset when a new month or year begins.
+21. No transaction causes the balance to fall below `"0.00"`.
+22. Every Debit amount is less than or equal to the available balance immediately before that transaction.
+23. Spending behavior becomes more conservative when the balance is low.
+24. Very low balances result primarily in essential spending and reduced discretionary activity.
+25. No merchant purchase is reduced to an implausibly tiny or token amount merely because funds are low or because more transactions are needed.
+26. If the available balance cannot support a realistic purchase, that purchase is postponed or omitted.
+27. Ordinary merchant transactions use amounts that are plausible for their merchant and transaction type.
+28. Spending returns gradually toward normal after meaningful Credits replenish the account.
+29. Every international transaction has an immediately following "2.00% Exchange Tax" transaction.
+30. Every exchange tax equals exactly 2% of its associated international transaction.
+31. Every exchange tax uses the same date and year as its associated transaction.
+32. Exchange tax transactions are included in the balance calculation.
+33. No exchange tax is charged on domestic transactions.
+34. Friend and family transfer descriptions contain only the person's full name.
+35. Friend and family descriptions do not contain TRANSFER TO, TRANSFER FROM, PAYMENT TO, PAYMENT FROM, or similar wording.
+36. All amounts are realistic Barbadian-dollar amounts.
+37. Transaction counts vary realistically across months.
+38. Recurring transactions show realistic continuity and variation across the full period.
+39. The final July 2026 balance is mathematically consistent with every transaction from August 2022 onward.
+40. The balance is never negative at any point in the complete dataset.
+41. The text file contains only the final three-dimensional Python list and no additional text.
+
+Do not output your validation process.
+
+Return the final result as a downloadable plain text (.txt) file containing only the complete three-dimensional Python list.
