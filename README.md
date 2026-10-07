@@ -54,7 +54,9 @@ Key limitations include:
 The following instructions are intended for users who want to reproduce the analysis or run the dashboard locally.
 
 ### Prerequisites
-Before you begin, ensure that you have Python 3.11.9 installed. 
+Before you begin, ensure that you have Python 3.11.9 and <a href="https://ollama.com/download">Ollama</a> installed.
+
+This project was tested with an NVIDIA GeForce RTX 4060 GPU and GTX 1650 GPU. Older GPUs (like NVIDIA GeForce GTX 10 & 16 Series) with outdated GPU drivers may cause Ollama to crash, so update to the latest GPU driver. *<a href="https://docs.ollama.com/gpu">Learn more about GPU requirements.</a>*
 
 ### 1. Clone the Repository
 Open your terminal or command prompt and run the following commands to clone the project then navigate into the directory:
